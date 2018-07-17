@@ -59,8 +59,6 @@
 </template>
 <script>
   import { mapActions } from 'vuex'
-  import Auth from '../services/Auth'
-
   export default {
     name: 'register',
     data () {

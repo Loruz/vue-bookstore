@@ -1,12 +1,13 @@
 import Auth from '../../services/Auth'
+import http from '../../helpers/http'
 
 const state = {
   isLoggedIn: false,
-  token: false
+  token: localStorage.getItem('accessToken') || false
 }
 
 const getters = {
-  isLoggedIn: state => state.isLoggedIn,
+  isLoggedIn: state => Boolean(state.token),
   token: state => state.token
 }
 
@@ -14,21 +15,20 @@ const actions = {
   register ({commit}, data) {
     return Auth.register(data)
       .then(res => {
-        commit('setLoggedIn', true)
         commit('setAccessToken', res.token)
       })
   },
   login ({commit}, credentials) {
     return Auth.login(credentials)
       .then(res => {
-        commit('setLoggedIn', true)
         commit('setAccessToken', res.token)
+        http.defaults.headers.common["Authorization"] = `Bearer ${res.token}`
       })
   },
   logout({ commit }) {
-    commit('setLoggedIn', false);
     commit('setUser', false);
     commit('clearAccessToken', false);
+    delete http.defaults.headers.common["Authorization"]
   }
 }
 
@@ -41,9 +41,6 @@ const mutations = {
     localStorage.removeItem('accessToken')
     state.token = false
   },
-  setLoggedIn (state, status) {
-    state.isLoggedIn = status
-  }
 }
 
 export default {

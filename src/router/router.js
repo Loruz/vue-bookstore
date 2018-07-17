@@ -5,6 +5,9 @@ import About from '../views/About.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 
+import RedirectIfLoggedIn from './guards/RedirectIfLoggedIn';
+import IsLoggedIn from './guards/IsLoggedIn';
+
 Vue.use(Router)
 
 export default new Router({
@@ -13,22 +16,26 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: Home,
+      beforeEnter: IsLoggedIn
     },
     {
       path: '/about',
       name: 'about',
-      component: About
+      component: About,
+      beforeEnter: IsLoggedIn
     },
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: Login,
+      beforeEnter: RedirectIfLoggedIn
     },
     {
       path: '/register',
       name: 'register',
-      component: Register
+      component: Register,
+      beforeEnter: RedirectIfLoggedIn
     }
   ]
 })
